@@ -10,6 +10,7 @@ This file contains the ground rules for any AI coding agent working on this repo
 ## 2. Security Invariants
 *   **Never trust client input.** All user-supplied data must be validated server-side (using Zod or equivalent).
 *   **Never treat client-side checks as sufficient authorization.**
+*   **Never treat middleware/proxy as the sole authorization boundary** — every Route Handler/Server Action must re-verify independently.
 *   **Never expose secrets.** Environment variables that are secrets must not be exposed to the client (i.e., do not prefix with `NEXT_PUBLIC_`). Do not log secrets.
 *   **Fail loudly on missing secrets.** Never invent a fallback secret if an environment variable is missing.
 *   **Default to restrictive.** When adding a new capability, use the most restrictive reasonable setting.

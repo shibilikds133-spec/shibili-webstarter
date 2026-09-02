@@ -7,7 +7,7 @@
       "contact-form"
     ],
     "architecture": {
-      "framework": "Next.js 14 App Router",
+      "framework": "Next.js 14.2.5 App Router",
       "language": "TypeScript",
       "styling": "Tailwind CSS",
       "deploymentTarget": "Vercel / Cloudflare Pages"
@@ -30,7 +30,13 @@
       {
         "package": "zod",
         "reason": "Server-side schema validation for API routes."
+      },
+      {
+        "package": "rateLimit.ts (local utility)",
+        "reason": "In-memory rate limiting. Known limitation: not distributed, single-instance only. Will not persist across multiple serverless instances."
       }
-    ]
+    ],
+    "assumptions": [],
+    "openQuestions": []
   }
 }
