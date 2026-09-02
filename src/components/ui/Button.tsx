@@ -3,9 +3,17 @@ import { clsx } from 'clsx';
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'danger';
+  isLoading?: boolean;
 };
 
-export default function Button({ variant = 'primary', className, ...rest }: Props) {
+export default function Button({ 
+  variant = 'primary', 
+  className, 
+  type = 'button', 
+  disabled, 
+  isLoading, 
+  ...rest 
+}: Props) {
   const styles: Record<string, string> = {
     primary: 'bg-brand-light text-white hover:bg-brand-dark',
     secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
@@ -13,6 +21,9 @@ export default function Button({ variant = 'primary', className, ...rest }: Prop
   };
   return (
     <button
+      type={type}
+      disabled={disabled || isLoading}
+      aria-busy={isLoading}
       className={clsx(
         'inline-flex items-center px-4 py-2 rounded text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
         styles[variant],

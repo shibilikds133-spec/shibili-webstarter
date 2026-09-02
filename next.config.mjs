@@ -4,6 +4,17 @@ const nextConfig = {
   reactStrictMode: true,
   async headers() {
     return [
+      // 1. Strict CSP for API Routes (JSON only, no scripts/styles needed)
+      {
+        source: '/api/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'none'; frame-ancestors 'none'; base-uri 'none';"
+          }
+        ]
+      },
+      // 2. Permissive CSP for Static Frontend (SSG + next-themes compatibility)
       {
         source: '/(.*)',
         headers: [

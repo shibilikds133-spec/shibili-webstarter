@@ -14,5 +14,10 @@ export default function Alert({
     info: 'bg-blue-100 text-blue-800 border border-blue-200',
     warning: 'bg-yellow-100 text-yellow-800 border border-yellow-200'
   };
-  return <div className={clsx(base, styles[type])}>{message}</div>;
+  const role = type === 'error' || type === 'warning' ? 'alert' : 'status';
+  return (
+    <div role={role} aria-live="polite" aria-atomic="true" className={clsx(base, styles[type])}>
+      {message}
+    </div>
+  );
 }

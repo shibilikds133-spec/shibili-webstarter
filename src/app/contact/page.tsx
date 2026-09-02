@@ -1,33 +1,25 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 
+import { ContactFormSchema, type ContactFormData } from '@/lib/schemas';
 import TextField from '@/components/form/TextField';
 import TextArea from '@/components/form/TextArea';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/feedback/Alert';
 
-const ContactSchema = z.object({
-  name: z.string().min(2, 'Name is too short'),
-  email: z.string().email('Invalid email'),
-  message: z.string().min(10, 'Message must be at least 10 characters')
-});
-
-type ContactValues = z.infer<typeof ContactSchema>;
-
 export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const form = useForm<ContactValues>({
-    resolver: zodResolver(ContactSchema),
-    defaultValues: { name: '', email: '', message: '' }
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(ContactFormSchema),
+    defaultValues: { name: '', email: '', message: '', website: '' }
   });
 
-  async function onSubmit(values: ContactValues) {
+  async function onSubmit(values: ContactFormData) {
     setStatus('idle');
     setErrorMessage(null);
     try {
@@ -64,6 +56,10 @@ export default function ContactPage() {
         aria-describedby="form-help"
         noValidate
       >
+        {/* Honeypot field for spam bots */}
+        <div className="hidden" aria-hidden="true">
+          <input type="text" tabIndex={-1} autoComplete="off" {...form.register('website')} />
+        </div>
         <TextField
           label="Name"
           {...form.register('name')}
@@ -81,7 +77,7 @@ export default function ContactPage() {
           {...form.register('message')}
           error={form.formState.errors.message?.message}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting}>
+        <Button type="submit" disabled={form.formState.isSubmitting} isLoading={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
         <div id="form-help" className="text-xs text-gray-500">

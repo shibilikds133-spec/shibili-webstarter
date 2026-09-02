@@ -1,20 +1,10 @@
-import * as z from 'zod';
 import { NextResponse } from 'next/server';
 
 import { rateLimitCheck } from '@/lib/rateLimit';
 import { getEnv } from '@/lib/env';
+import { ContactFormSchema } from '@/lib/schemas';
 
 export const runtime = 'nodejs'; // Required for in-memory rate limiting map to persist
-
-const ContactSchema = z.object({
-  name: z.string().min(2).max(200),
-  email: z.string().email(),
-  message: z.string().min(10).max(5000)
-});
-
-async function verifyTurnstile(): Promise<boolean> {
-  return true;
-}
 
 export async function POST(req: Request) {
   const env = getEnv();
@@ -23,10 +13,10 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 
-  const parsed = ContactSchema.safeParse(body);
+  const parsed = ContactFormSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Validation failed', issues: parsed.error.issues.map(i => i.message) },
@@ -34,18 +24,22 @@ export async function POST(req: Request) {
     );
   }
 
-  const ip = req.headers.get('x-forwarded-for') || 'unknown';
-  const limited = rateLimitCheck(ip);
+  const { name, email, message, website } = parsed.data;
+
+  // Honeypot check (abort if bot filled the hidden field)
+  if (website && website.length > 0) {
+    return NextResponse.json({ status: 'ok' }, { status: 200 }); // fake success for bots
+  }
+
+  // Rate Limiting (In-memory dev/local fallback).
+  // Note: For distributed deployments, adapt `rateLimitCheck` to use a global store (e.g. Redis).
+  // Do NOT rely solely on x-forwarded-for for authorization boundaries.
+  const ip = req.headers.get('cf-connecting-ip') || req.headers.get('x-forwarded-for') || 'unknown';
+  const limited = await rateLimitCheck(ip);
   if (limited) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
-  const captchaOk = await verifyTurnstile();
-  if (!captchaOk) {
-    return NextResponse.json({ error: 'Captcha failed' }, { status: 403 });
-  }
-
-  const { name, email, message } = parsed.data;
   const payload = {
     tenantId: env.TENANT_ID,
     name,
@@ -58,6 +52,7 @@ export async function POST(req: Request) {
   };
 
   /*
+  // Example Upstream submission
   try {
     const upstream = await fetch(`${env.RAISUITE_API_BASE}/enquiry`, {
       method: 'POST',
@@ -69,10 +64,13 @@ export async function POST(req: Request) {
     });
 
     if (!upstream.ok) {
-      return NextResponse.json({ error: 'Upstream error' }, { status: 502 });
+      console.error(`[contact] Upstream error: ${upstream.status}`);
+      // Do not expose upstream details to client
+      return NextResponse.json({ error: 'Submission failed' }, { status: 500 });
     }
-  } catch {
-    return NextResponse.json({ error: 'Network error' }, { status: 502 });
+  } catch (error) {
+    console.error('[contact] Network error contacting upstream', error instanceof Error ? error.message : 'unknown');
+    return NextResponse.json({ error: 'Submission failed' }, { status: 500 });
   }
   */
 

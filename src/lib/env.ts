@@ -18,8 +18,9 @@ export function getEnv() {
     TURNSTILE_SECRET: process.env.TURNSTILE_SECRET
   });
   if (!parsed.success) {
-    console.error(parsed.error.flatten().fieldErrors);
-    throw new Error('Invalid environment configuration');
+    const missingFields = Object.keys(parsed.error.flatten().fieldErrors);
+    console.error(`[env] Missing or invalid configuration: ${missingFields.join(', ')}`);
+    throw new Error('Environment configuration error. Check the application logs.');
   }
   cached = parsed.data;
   return cached;
