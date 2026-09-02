@@ -9,7 +9,7 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <h2 className="text-2xl font-bold">Welcome to the Fest OS</h2>
+      <h2 className="text-2xl font-bold">Welcome to shibili-webstarter</h2>
       <p>
         This template provides a standardized Next.js + TypeScript + Tailwind setup with environment validation,
         a contact endpoint scaffold, and DevContainer configuration for consistent onboarding.
