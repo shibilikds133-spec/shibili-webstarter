@@ -37,3 +37,20 @@ export function buildMetadata(opts: SeoOptions = {}): Metadata {
     }
   };
 }
+
+export function generateEventJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: 'Fest OS 2026',
+    startDate: '2026-10-15T18:00',
+    endDate: '2026-10-17T23:00',
+    location: {
+      '@type': 'Place',
+      name: 'Fest Venue',
+      address: 'City, Country'
+    },
+    image: [`${DEFAULT_URL}/og-default.png`],
+    description: 'Join us at Fest OS 2026 - the ultimate web starter festival.',
+  };
+}
