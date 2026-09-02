@@ -1,161 +1,196 @@
-# Raisuite Web Starter
+# shibili-webstarter
 
-A reusable **Next.js (App Router) + TypeScript + Tailwind** starter for building multi-tenant client websites that begin with mostly static content and can later evolve to dynamic CMS-driven experiences. Includes:
+> A personal, production-ready **Next.js + TypeScript + Tailwind CSS** starter template by [@shibilikds133-spec](https://github.com/shibilikds133-spec).
 
-- DevContainer for consistent developer onboarding.
-- Environment variable validation.
-- Multi-tenant-ready contact endpoint scaffold.
-- Accessible form components.
-- Testing setup (Jest + Testing Library).
-- Tailwind design token starter (CSS variables for tenant themes).
+Use this template as the starting point for any new web project — everything you need is already configured.
 
-## Quick Start
+---
 
-1. Install VS Code + Dev Containers extension.
-2. Clone repository:
-   ```bash
-   git clone <repo-url> raihsuite-web-starter
-   cd raihsuite-web-starter
-   ```
-3. Open folder in VS Code; choose "Reopen in Container".
-4. Copy `env.example` to `.env` and fill in values.
-5. Run:
-   ```bash
-   pnpm dev
-   ```
-6. Visit `http://localhost:3000`.
+## ✨ Features
 
-## Scripts
+| Feature | Details |
+|---|---|
+| **Framework** | Next.js 14 (App Router) |
+| **Language** | TypeScript |
+| **Styling** | Tailwind CSS + CSS variables |
+| **Dark Mode** | `next-themes` — system / manual toggle |
+| **Forms** | React Hook Form + Zod validation |
+| **Toast Notifications** | `react-hot-toast` |
+| **SEO** | `buildMetadata()` helper (Open Graph + Twitter card) |
+| **Contact API** | `/api/contact` — validated, rate-limited |
+| **UI Components** | Button, Badge, Card, Alert, Spinner, ThemeToggle |
+| **Error Handling** | `error.tsx` (global) + `not-found.tsx` (404) |
+| **Testing** | Jest + React Testing Library |
+| **Linting** | ESLint + Prettier |
+| **DevContainer** | VS Code Dev Container for zero-setup onboarding |
+| **Deployment** | Cloudflare Pages ready |
+
+---
+
+## 🚀 Quick Start
+
+### Use this template
+Click **"Use this template"** on GitHub to create a new repo from this starter.
+
+### Local setup
+```bash
+git clone https://github.com/shibilikds133-spec/shibili-webstarter.git my-project
+cd my-project
+pnpm install
+cp .env.example .env        # fill in your values
+pnpm dev
+```
+
+Visit `http://localhost:3000`
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── api/contact/        ← Contact API route
+│   ├── contact/            ← Contact page
+│   ├── error.tsx           ← Global error boundary
+│   ├── not-found.tsx       ← 404 page
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ui/
+│   │   ├── Alert.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── Spinner.tsx
+│   │   └── ThemeToggle.tsx
+│   ├── form/
+│   │   ├── TextField.tsx
+│   │   └── TextArea.tsx
+│   └── layout/
+│       ├── Header.tsx
+│       └── Footer.tsx
+└── lib/
+    ├── contact.ts
+    ├── env.ts
+    ├── rateLimit.ts
+    └── seo.ts              ← buildMetadata() helper
+```
+
+---
+
+## 🔧 Scripts
 
 | Script | Description |
-|--------|-------------|
-| `pnpm dev` | Start local development server |
+|---|---|
+| `pnpm dev` | Start development server |
 | `pnpm build` | Production build |
-| `pnpm start` | Start production server locally |
-| `pnpm lint` | ESLint (errors fail) |
+| `pnpm start` | Start production server |
+| `pnpm lint` | ESLint (zero warnings) |
 | `pnpm format` | Prettier formatting |
-| `pnpm typecheck` | TypeScript type checking |
-| `pnpm preflight` | Validate required environment variables |
+| `pnpm typecheck` | TypeScript type check |
+| `pnpm preflight` | Validate env variables |
 | `pnpm test` | Run Jest tests |
+| `pnpm build:pages` | Build for Cloudflare Pages |
 
-## Environment Variables
+---
 
-Defined in `env.example`:
-- `TENANT_ID` – identifies tenant (used for theming, tagging enquiries).
-- `RAISUITE_API_BASE` – base URL for Raisuite ERP API.
-- `RAISUITE_API_KEY` – secret API key for server-side usage only.
-- `TURNSTILE_SECRET` – optional (Cloudflare Turnstile CAPTCHA).
+## 🌍 Environment Variables
 
-Validation occurs via `src/lib/env.ts`. The contact route fails early if variables are missing.
+Copy `.env.example` to `.env` and fill in the values:
 
-## Contact Endpoint
-
-POST `/api/contact`
-- Accepts `name`, `email`, `message`.
-- Validates with Zod.
-- Rate limit placeholder (in-memory).
-- TODO: Add Turnstile (Cloudflare) verification.
-- TODO: Replace mock forwarding with real fetch to Raisuite ERP.
-
-## Converting HTML Templates
-
-1. Place original template files in a temporary folder (e.g. `templates/source-reference/`).
-2. Identify repeating sections (hero, features, testimonials) → convert into React components under `src/components/`.
-3. Inline scripts that only animate can usually become CSS transitions or `framer-motion` usage.
-4. For static assets (images, fonts), move into `public/`.
-5. Replace global CSS with Tailwind classes incrementally; keep original stylesheet until fully replaced.
-
-## Multi-Tenant Theming
-
-- Current approach uses CSS variables (`--color-brand`).
-- Future: Map `TENANT_ID` to a theme object and inject variables at runtime in `layout.tsx` (or middleware when customizing per request).
-- Optionally integrate a design token file exporting Tailwind `theme.extend` overrides.
-
-## Future CMS Integration
-
-Possible approach:
-1. Add route handlers or server actions calling a headless CMS.
-2. Use incremental static regeneration (`fetch` with `next: { revalidate: 60 }`) or dynamic rendering.
-3. Implement preview mode (if using Next.js preview API with a secret token).
-
-## Testing
-
-- Basic test example located in `src/__tests__/contactForm.test.tsx`.
-- Extend coverage for new components as you add them.
-- TODO: Add accessibility tests (axe-core) & Playwright for e2e in future.
-
-## Accessibility
-
-- Form inputs link labels with `htmlFor`.
-- Error messages have `role=\"alert\"` and `aria-describedby`.
-- TODO: Add automated axe checks.
-
-## Deployment (Cloudflare Pages)
-
-- Cloudflare Pages can build Next.js directly; for advanced edge features, evaluate `@cloudflare/next-on-pages` (if required for middleware).
-- Ensure environment variables set in Cloudflare dashboard.
-- Use branch protections with GitHub Actions (optional) before allowing deployments.
-
-### Cloudflare Pages Setup
-
-- Build command: `npx @cloudflare/next-on-pages@latest`
-- Output directory: `.vercel/output/static`
-- Root directory: `/`
-- Build system version: `3 (latest)`
-- Node compatibility: enable `nodejs_compat` (via Pages UI) or add `wrangler.toml`:
-
-```toml
-name = "raihsuite-web-starter"
-compatibility_date = "2024-11-01"
-compatibility_flags = ["nodejs_compat"]
+```env
+TENANT_ID=your-tenant-id
+RAISUITE_API_BASE=https://api.example.com
+RAISUITE_API_KEY=your-secret-key
+TURNSTILE_SECRET=           # Optional — Cloudflare Turnstile CAPTCHA
+NEXT_PUBLIC_SITE_URL=https://yoursite.com
 ```
 
-Environment variables (Production):
-- `TENANT_ID`
-- `RAISUITE_API_BASE`
-- `RAISUITE_API_KEY`
-- `TURNSTILE_SECRET` (optional)
+---
 
-Local parity:
-```bash
-pnpm install --frozen-lockfile
-node scripts/preflight-env.mjs
-pnpm build:pages
+## 🎨 UI Components
+
+### Button
+```tsx
+<Button variant="primary">Submit</Button>
+<Button variant="secondary">Cancel</Button>
+<Button variant="danger">Delete</Button>
 ```
 
-Redeploy checklist:
-- Ensure output dir is `.vercel/output/static` (no leading slash)
-- Add required environment variables in Pages → Settings → Environment variables
-- Trigger a new deploy
+### Badge
+```tsx
+<Badge variant="success">Active</Badge>
+<Badge variant="warning">Pending</Badge>
+<Badge variant="danger">Error</Badge>
+```
 
-## Rate Limiting & Security Notes
+### Card
+```tsx
+<Card padding="md">
+  <p>Your content here</p>
+</Card>
+```
 
-Current rate limiting is **not production-safe** (in-memory). Replace with:
-- Cloudflare KV / Durable Objects
-- Redis (if using external store)
-- Add per-IP & per-tenant counters and exponential backoff or captcha requirement after threshold.
+### Alert
+```tsx
+<Alert variant="success" title="Done!">Your message was sent.</Alert>
+<Alert variant="danger">Something went wrong.</Alert>
+```
 
-Always:
-- Validate input.
-- Avoid returning upstream error details.
-- Log minimal PII (extend log scrubbing when needed).
+### Spinner
+```tsx
+<Spinner size="md" />
+```
 
-## Roadmap / TODO
+### Toast (via react-hot-toast)
+```tsx
+import toast from 'react-hot-toast';
 
-- [ ] Implement Turnstile CAPTCHA integration.
-- [ ] Add proper multi-tenant theme mapping.
-- [ ] Add CMS data fetching example.
-- [ ] Move rate limiting to durable store.
-- [ ] Add Playwright E2E tests.
-- [ ] Add Git hooks (Husky) for pre-commit lint & format.
+toast.success('Saved!');
+toast.error('Something went wrong.');
+```
 
-## Contributing
+---
 
-1. Create a feature branch.
-2. Run `pnpm preflight` before pushing.
-3. Include tests for new components or endpoints.
-4. Open PR; run local `pnpm typecheck && pnpm lint && pnpm test` before requesting review.
+## 🔍 SEO
 
-## License
+Use `buildMetadata()` in any page:
 
-Internal proprietary starter (adjust if open-sourcing later).
+```tsx
+// app/about/page.tsx
+import { buildMetadata } from '@/lib/seo';
+
+export const metadata = buildMetadata({
+  title: 'About',
+  description: 'Learn more about us.'
+});
+```
+
+---
+
+## ☁️ Deployment (Cloudflare Pages)
+
+| Setting | Value |
+|---|---|
+| Build command | `npx @cloudflare/next-on-pages@latest` |
+| Output directory | `.vercel/output/static` |
+| Node compatibility | Enable `nodejs_compat` |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Cloudflare Turnstile CAPTCHA integration
+- [ ] Multi-tenant theme mapping
+- [ ] CMS data fetching example
+- [ ] Production-safe rate limiting (KV / Redis)
+- [ ] Playwright E2E tests
+- [ ] Husky pre-commit hooks
+
+---
+
+## 📄 License
+
+MIT — feel free to use and modify.

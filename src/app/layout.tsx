@@ -1,28 +1,32 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
+import { Toaster } from 'react-hot-toast';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Raisuite Web Starter',
-  description: 'Reusable starter template for multi-tenant Raisuite client sites.'
-};
+export const metadata: Metadata = buildMetadata();
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <header className="border-b mb-6">
-          <div className="container-base py-4 flex items-center justify-between">
-            <h1 className="text-xl font-semibold">Raisuite Starter</h1>
-            <nav className="flex gap-4">
-              <a href="/">Home</a>
-              <a href="/contact">Contact</a>
-            </nav>
-          </div>
-        </header>
-        <main className="container-base">{children}</main>
-        <footer className="container-base py-10 text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} Raisuite Starter. All rights reserved.
-        </footer>
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Header />
+          <main className="container-base flex-1 py-8">{children}</main>
+          <Footer />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'var(--toast-bg, #fff)',
+                color: 'var(--toast-color, #111)'
+              }
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
