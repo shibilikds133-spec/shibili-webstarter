@@ -1,4 +1,3 @@
-import { headers } from 'next/headers';
 import './globals.css';
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
@@ -10,12 +9,10 @@ import { buildMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildMetadata();
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const nonce = headers().get('x-nonce') || undefined;
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
           <main className="container-base flex-1 py-8">{children}</main>
           <Footer />
