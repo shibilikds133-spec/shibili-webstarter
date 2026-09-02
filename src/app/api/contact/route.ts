@@ -3,7 +3,7 @@ import { rateLimitCheck } from '@/lib/rateLimit';
 import { getEnv } from '@/lib/env';
 import { NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs'; // Required for in-memory rate limiting map to persist
 
 const ContactSchema = z.object({
   name: z.string().min(2).max(200),

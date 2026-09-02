@@ -1,0 +1,36 @@
+{
+  "project": {
+    "name": "shibili-webstarter",
+    "purpose": "A Next.js-based, secure-by-default starter template for landing pages, marketing sites, and simple web applications.",
+    "profile": "interactive-web",
+    "capabilities": [
+      "contact-form"
+    ],
+    "architecture": {
+      "framework": "Next.js 14 App Router",
+      "language": "TypeScript",
+      "styling": "Tailwind CSS",
+      "deploymentTarget": "Vercel / Cloudflare Pages"
+    },
+    "security": {
+      "dataSensitivity": "low",
+      "authentication": "none",
+      "headersEnabled": true,
+      "cspEnabled": true
+    },
+    "dependencyDecisions": [
+      {
+        "package": "next-themes",
+        "reason": "For system/manual dark mode toggling without heavy JS."
+      },
+      {
+        "package": "react-hot-toast",
+        "reason": "Lightweight client-side notifications."
+      },
+      {
+        "package": "zod",
+        "reason": "Server-side schema validation for API routes."
+      }
+    ]
+  }
+}
