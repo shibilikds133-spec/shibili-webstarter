@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from 'react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'danger';

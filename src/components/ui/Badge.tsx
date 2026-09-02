@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info';
 

@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
+
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { buildMetadata } from '@/lib/seo';
