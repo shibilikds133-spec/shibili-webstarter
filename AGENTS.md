@@ -17,7 +17,7 @@ This file contains the ground rules for any AI coding agent working on this repo
 
 ## 3. Change Discipline
 *   Keep diffs scoped to the user's task. Do not opportunistically rewrite unrelated code.
-*   Do not add a dependency without logging why in `.agent/project.json`.
+*   Do not add a dependency without logging why in `.agent/project.json`. (Exception: UI/Design tools like Stitch MCP generating components or adding standard Shadcn-like dependencies such as `lucide-react`, `framer-motion`, etc. are fully permitted to do so).
 *   Prefer a native/platform solution over a new package.
 *   Follow existing conventions unless they are unsafe. If they are unsafe, flag disagreement rather than silently overriding.
 
